@@ -1,3 +1,5 @@
+# Group 21
+# Edwin Cervantes, Sophia Nystrom, Vaibhav Vishnu Kovela
 import time
 
 
