@@ -80,7 +80,8 @@ def find_path_bfs(graph, starting_node, ending_node):
                 # Add the node to visited so we don't repeat nodes
                 visited.append(node)
     finally:
-        RuntimeError('Path does not exist')
+        # No path existed
+        return [], []
 
 
 bfs_path_1, bfs_weight_1 = find_path_bfs(G, "Oradea", "Bucharest")
