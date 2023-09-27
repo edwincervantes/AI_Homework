@@ -29,19 +29,51 @@ G.add_edge("Vaslui", "Iasi", weight=92)
 G.add_edge("Iasi", "Neamt", weight=87)
 
 
-def bfs(graph, starting_node):
+def find_path_bfs(graph, starting_node, ending_node):
+    '''
+
+    :param graph: A Networkx graph
+    :param starting_node: Node you wish to begin at
+    :param ending_node: Node you wish to end at
+    :return: A path from starting node to end node and the weight of the path
+    '''
     visited = []
-    queue = [starting_node]
-    while queue:
-        node = queue.pop(0)
-        if node not in visited:
-            visited.append(node)
-            for edge in graph.edges:
-                if edge[0] == node:
-                    queue.append(edge[1])
-                elif edge[1] == node:
-                    queue.append(edge[0])
-    return visited
+    queue = [[starting_node]]
+
+    try:
+        # Always start with the last element of queue as this is our last visited node
+        while queue:
+            path = queue.pop(0)
+            node = path[-1]
+            if node not in visited:
+                neighbors = []
+                # Find what edges connects these two nodes and make them neighbors
+                for edge in graph.edges:
+                    if edge[0] == node:
+                        neighbors.append(edge[1])
+                    elif edge[1] == node:
+                        neighbors.append(edge[0])
+
+                # Add the neighbor to the path and add the path to the queue
+                for neighbor in neighbors:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    queue.append(new_path)
+
+                    # Found our destination, return weight and both
+                    if neighbor == ending_node:
+                        weight = nx.path_weight(graph, new_path, 'weight')
+                        return new_path, weight
+                # Add the node to visited so we don't repeat nodes
+                visited.append(node)
+    finally:
+        RuntimeError('Path does not exist')
 
 
-print(bfs(G, "Bucharest"))
+bfs_path_1, bfs_weight_1 = find_path_bfs(G, "Oradea", "Bucharest")
+bfs_path_2, bfs_weight_2 = find_path_bfs(G, "Timisoara", "Bucharest")
+bfs_path_3, bfs_weight_3 = find_path_bfs(G, "Neamt", "Bucharest")
+print("Path from Oradea to Bucharest via BFS: {}, weight: {}".format(bfs_path_1, bfs_weight_1))
+print("Path from Timisoara to Bucharest via BFS: {}, weight: {}".format(bfs_path_2, bfs_weight_2))
+print("Path from Neamt to Bucharest via BFS: {}, weight: {}".format(bfs_path_3, bfs_weight_3))
+
