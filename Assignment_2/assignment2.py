@@ -29,6 +29,17 @@ G.add_edge("Vaslui", "Iasi", weight=92)
 G.add_edge("Iasi", "Neamt", weight=87)
 
 
+def find_path_dfs(graph, starting_node, ending_node):
+    '''
+
+    :param graph: A Networkx graph
+    :param starting_node: Node you wish to begin at
+    :param ending_node: Node you wish to end at
+    :return: A path from starting node to end node and the weight of the path
+    '''
+    pass
+    
+
 def find_path_bfs(graph, starting_node, ending_node):
     '''
 
@@ -42,6 +53,8 @@ def find_path_bfs(graph, starting_node, ending_node):
 
     try:
         # Always start with the last element of queue as this is our last visited node
+        # Since we are using bfs, we will always put the children of the current node 
+        # to the back of the queue
         while queue:
             path = queue.pop(0)
             node = path[-1]
