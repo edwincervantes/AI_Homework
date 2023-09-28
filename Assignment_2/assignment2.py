@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import networkx as nx
 
 # Create the weigh Graph representing the map
@@ -37,7 +36,25 @@ def find_path_dfs(graph, starting_node, ending_node):
     :param ending_node: Node you wish to end at
     :return: A path from starting node to end node and the weight of the path
     '''
-    pass
+    visited = []
+    queue = [(starting_node, [starting_node])]
+
+    # Since we are using dfs, we will always put the children of the current node
+    # to the front of the queue
+    while queue:
+        # Get node from front of the queue
+        node, path = queue.pop()
+        if node not in visited:
+            visited.append(node)
+            if node == ending_node:
+                weight = nx.path_weight(graph, path, 'weight')
+                return path, weight
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+    # No path existed
+    return [], []
     
 
 def find_path_bfs(graph, starting_node, ending_node):
@@ -51,37 +68,33 @@ def find_path_bfs(graph, starting_node, ending_node):
     visited = []
     queue = [[starting_node]]
 
-    try:
-        # Always start with the last element of queue as this is our last visited node
-        # Since we are using bfs, we will always put the children of the current node 
-        # to the back of the queue
-        while queue:
-            path = queue.pop(0)
-            node = path[-1]
-            if node not in visited:
-                neighbors = []
-                # Find what edges connects these two nodes and make them neighbors
-                for edge in graph.edges:
-                    if edge[0] == node:
-                        neighbors.append(edge[1])
-                    elif edge[1] == node:
-                        neighbors.append(edge[0])
+    # Since we are using bfs, we will always put the children of the current node
+    # to the back of the queue
+    while queue:
+        # Get node from front of the queue
+        path = queue.pop(0)
+        node = path[-1]
+        if node not in visited:
+            neighbors = []
+            visited.append(node)
+            if node == ending_node:
+                weight = nx.path_weight(graph, path, 'weight')
+                return path, weight
+            # Find what edges connects these two nodes and make them neighbors
+            for edge in graph.edges:
+                if edge[0] == node:
+                    neighbors.append(edge[1])
+                elif edge[1] == node:
+                    neighbors.append(edge[0])
 
-                # Add the neighbor to the path and add the path to the queue
-                for neighbor in neighbors:
-                    new_path = list(path)
-                    new_path.append(neighbor)
-                    queue.append(new_path)
+            # Add the neighbor to the path and add the path to the queue
+            for neighbor in neighbors:
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
 
-                    # Found our destination, return weight and both
-                    if neighbor == ending_node:
-                        weight = nx.path_weight(graph, new_path, 'weight')
-                        return new_path, weight
-                # Add the node to visited so we don't repeat nodes
-                visited.append(node)
-    finally:
-        # No path existed
-        return [], []
+    # No path existed
+    return [], []
 
 
 bfs_path_1, bfs_weight_1 = find_path_bfs(G, "Oradea", "Bucharest")
@@ -90,4 +103,12 @@ bfs_path_3, bfs_weight_3 = find_path_bfs(G, "Neamt", "Bucharest")
 print("Path from Oradea to Bucharest via BFS: {}, weight: {}".format(bfs_path_1, bfs_weight_1))
 print("Path from Timisoara to Bucharest via BFS: {}, weight: {}".format(bfs_path_2, bfs_weight_2))
 print("Path from Neamt to Bucharest via BFS: {}, weight: {}".format(bfs_path_3, bfs_weight_3))
+
+dfs_path_1, dfs_weight_1 = find_path_dfs(G, "Oradea", "Bucharest")
+dfs_path_2, dfs_weight_2 = find_path_dfs(G, "Timisoara", "Bucharest")
+dfs_path_3, dfs_weight_3 = find_path_dfs(G, "Neamt", "Bucharest")
+print("Path from Oradea to Bucharest via DFS: {}, weight: {}".format(dfs_path_1, dfs_weight_1))
+print("Path from Timisoara to Bucharest via DFS: {}, weight: {}".format(dfs_path_2, dfs_weight_2))
+print("Path from Neamt to Bucharest via DFS: {}, weight: {}".format(dfs_path_3, dfs_weight_3))
+
 
