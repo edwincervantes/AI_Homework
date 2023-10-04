@@ -122,8 +122,9 @@ heuristic = {
     'Neamt': 234
 }
 
-# A* search function
-def find_path_astar(graph, start, goal):
+#A* search function
+def Astar(graph, start, goal):
+    came_from = {} 
     open_set = [(heuristic[start], start)]  # Priority queue of nodes to explore
     g_score = {city: float('inf') for city in graph}  # Cost from start to each node
     g_score[start] = 0
@@ -138,29 +139,18 @@ def find_path_astar(graph, start, goal):
                 path.append(current)
                 current = came_from.get(current)
             return path[::-1],g_score[goal]
-
-        for neighbor, cost in graph[current]:
-            tentative_g_score = g_score[current] + cost
-            if tentative_g_score < g_score[neighbor]:
-                came_from[neighbor] = current
-                g_score[neighbor] = tentative_g_score
-                f_score = tentative_g_score + heuristic[neighbor]
-                heapq.heappush(open_set, (f_score, neighbor))
+        for i in range(len(graph[current])):
+            neighbor = list(graph[current])
+            cost = [G[current][x]['weight'] for x in neighbor]
+            tentative_g_score = g_score[current] + cost[i]
+            if tentative_g_score < g_score[neighbor[i]]:
+                came_from[neighbor[i]] = current
+                g_score[neighbor[i]] = tentative_g_score
+                f_score = tentative_g_score + heuristic[neighbor[i]]
+                heapq.heappush(open_set, (f_score, neighbor[i]))
 
     return None  # No path found
 
-# Define the start and goal cities
-#start = 'Arad'
-#goal = 'Bucharest'
-
-# Run A* search and print the result
-#came_from = {}
-#path, score = Astar(graph, start, goal)
-#if path:
-#    print(f'Shortest path from {start} to {goal}:', score)
-#    print(' -> '.join(path))
-#else:
-#    print(f'No path found from {start} to {goal}.')
 
 
 bfs_path_1, bfs_weight_1 = find_path_bfs(G, "Oradea", "Bucharest")
@@ -169,19 +159,17 @@ bfs_path_3, bfs_weight_3 = find_path_bfs(G, "Neamt", "Bucharest")
 print("Path from Oradea to Bucharest via BFS: {}, weight: {}".format(bfs_path_1, bfs_weight_1))
 print("Path from Timisoara to Bucharest via BFS: {}, weight: {}".format(bfs_path_2, bfs_weight_2))
 print("Path from Neamt to Bucharest via BFS: {}, weight: {}".format(bfs_path_3, bfs_weight_3))
-
+print('\n\n')
 dfs_path_1, dfs_weight_1 = find_path_dfs(G, "Oradea", "Bucharest")
 dfs_path_2, dfs_weight_2 = find_path_dfs(G, "Timisoara", "Bucharest")
 dfs_path_3, dfs_weight_3 = find_path_dfs(G, "Neamt", "Bucharest")
 print("Path from Oradea to Bucharest via DFS: {}, weight: {}".format(dfs_path_1, dfs_weight_1))
 print("Path from Timisoara to Bucharest via DFS: {}, weight: {}".format(dfs_path_2, dfs_weight_2))
 print("Path from Neamt to Bucharest via DFS: {}, weight: {}".format(dfs_path_3, dfs_weight_3))
-
-a*_path_1, a*_weight_1 = find_path_astar(G, "Oradea", "Bucharest")
-a*_path_2, a*_weight_2 = find_path_astar(G, "Timisoara", "Bucharest")
-a*_path_3, a*_weight_3 = find_path_astar(G, "Neamt", "Bucharest")
-print("Path from Oradea to Bucharest via A*: {}, weight: {}".format(a*_path_1, a*_weight_1))
-print("Path from Timisoara to Bucharest via A*: {}, weight: {}".format(a*_path_2, a*_weight_2))
-print("Path from Neamt to Bucharest via A*: {}, weight: {}".format(a*_path_3, a*_weight_3))
-
-
+print('\n\n')
+aStar_path_1, aStar_weight_1 = Astar(G, "Oradea", "Bucharest")
+aStar_path_2, aStar_weight_2  = Astar(G, "Timisoara", "Bucharest")
+aStar_path_3, aStar_weight_3  = Astar(G, "Neamt", "Bucharest")
+print("Path from Oradea to Bucharest via A*: {}, weight: {}".format(aStar_path_1, aStar_weight_1))
+print("Path from Timisoara to Bucharest via A*: {}, weight: {}".format(aStar_path_2, aStar_weight_2))
+print("Path from Neamt to Bucharest via A*: {}, weight: {}".format(aStar_path_3, aStar_weight_3))
