@@ -122,9 +122,8 @@ heuristic = {
     'Neamt': 234
 }
 
-#A* search function
+
 def Astar(graph, start, goal):
-    came_from = {} 
     open_set = [(heuristic[start], start)]  # Priority queue of nodes to explore
     g_score = {city: float('inf') for city in graph}  # Cost from start to each node
     g_score[start] = 0
@@ -138,10 +137,13 @@ def Astar(graph, start, goal):
             while current:
                 path.append(current)
                 current = came_from.get(current)
-            return path[::-1],g_score[goal]
-        for i in range(len(graph[current])):
+            return path[::-1], g_score[goal]
+        print(current)
+        for i in range(len(graph[start])):
             neighbor = list(graph[current])
             cost = [G[current][x]['weight'] for x in neighbor]
+            print(i)
+            print(current)
             tentative_g_score = g_score[current] + cost[i]
             if tentative_g_score < g_score[neighbor[i]]:
                 came_from[neighbor[i]] = current
@@ -149,9 +151,9 @@ def Astar(graph, start, goal):
                 f_score = tentative_g_score + heuristic[neighbor[i]]
                 heapq.heappush(open_set, (f_score, neighbor[i]))
 
-    return None  # No path found
+    return [], []  # No path found
 
-
+came_from = {}
 
 bfs_path_1, bfs_weight_1 = find_path_bfs(G, "Oradea", "Bucharest")
 bfs_path_2, bfs_weight_2 = find_path_bfs(G, "Timisoara", "Bucharest")
@@ -168,8 +170,8 @@ print("Path from Timisoara to Bucharest via DFS: {}, weight: {}".format(dfs_path
 print("Path from Neamt to Bucharest via DFS: {}, weight: {}".format(dfs_path_3, dfs_weight_3))
 print('\n\n')
 aStar_path_1, aStar_weight_1 = Astar(G, "Oradea", "Bucharest")
-aStar_path_2, aStar_weight_2  = Astar(G, "Timisoara", "Bucharest")
-aStar_path_3, aStar_weight_3  = Astar(G, "Neamt", "Bucharest")
+aStar_path_2, aStar_weight_2 = Astar(G, "Timisoara", "Bucharest")
+aStar_path_3, aStar_weight_3 = Astar(G, "Neamt", "Bucharest")
 print("Path from Oradea to Bucharest via A*: {}, weight: {}".format(aStar_path_1, aStar_weight_1))
 print("Path from Timisoara to Bucharest via A*: {}, weight: {}".format(aStar_path_2, aStar_weight_2))
 print("Path from Neamt to Bucharest via A*: {}, weight: {}".format(aStar_path_3, aStar_weight_3))
