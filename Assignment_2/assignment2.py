@@ -124,11 +124,13 @@ heuristic = {
 
 
 def Astar(graph, start, goal):
+    came_from = {}
     open_set = [(heuristic[start], start)]  # Priority queue of nodes to explore
     g_score = {city: float('inf') for city in graph}  # Cost from start to each node
     g_score[start] = 0
 
     while open_set:
+        
         _, current = heapq.heappop(open_set)
 
         if current == goal:
@@ -138,7 +140,8 @@ def Astar(graph, start, goal):
                 path.append(current)
                 current = came_from.get(current)
             return path[::-1], g_score[goal]
-        for i in range(len(graph[start])):
+        
+        for i in range(len(graph[current])):
             neighbor = list(graph[current])
             cost = [G[current][x]['weight'] for x in neighbor]
             tentative_g_score = g_score[current] + cost[i]
@@ -148,9 +151,7 @@ def Astar(graph, start, goal):
                 f_score = tentative_g_score + heuristic[neighbor[i]]
                 heapq.heappush(open_set, (f_score, neighbor[i]))
 
-    return [], []  # No path found
-
-came_from = {}
+    return [],[]# No path found
 
 bfs_path_1, bfs_weight_1 = find_path_bfs(G, "Oradea", "Bucharest")
 bfs_path_2, bfs_weight_2 = find_path_bfs(G, "Timisoara", "Bucharest")
