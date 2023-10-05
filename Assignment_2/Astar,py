@@ -69,7 +69,7 @@ def Astar(graph, start, goal):
                 current = came_from.get(current)
             return path[::-1],g_score[goal]
         print(current)
-        for i in range(len(graph['Arad'])):
+        for i in range(len(graph[current])):
             neighbor = list(graph[current])
             cost = [G[current][x]['weight'] for x in neighbor]
             tentative_g_score = g_score[current] + cost[i]
